@@ -81,6 +81,11 @@ public class StackScript : MonoBehaviour {
 
     void Update()
     {
+        if(gameOver)
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             if (PlaceTile())
@@ -238,18 +243,14 @@ public class StackScript : MonoBehaviour {
     // for x and z axis
     private void MoveTile()
     {
-        if (!gameOver)
+        tileTransition += Time.deltaTime * tileSpeed;
+        if (isMovingOnX)
         {
-            tileTransition += Time.deltaTime * tileSpeed;
-            if (isMovingOnX)
-            {
-                theStack[stackIndex].transform.localPosition = new Vector3(Mathf.Sin(tileTransition) * BOUNDS_SIZE + BOUNDS_MARGIN, score, secondaryPosition);
-            }
-            else
-            {
-                theStack[stackIndex].transform.localPosition = new Vector3(secondaryPosition, score, Mathf.Sin(tileTransition) * BOUNDS_SIZE + BOUNDS_MARGIN);
-
-            }
+            theStack[stackIndex].transform.localPosition = new Vector3(Mathf.Sin(tileTransition) * BOUNDS_SIZE + BOUNDS_MARGIN, score, secondaryPosition);
+        }
+        else
+        {
+            theStack[stackIndex].transform.localPosition = new Vector3(secondaryPosition, score, Mathf.Sin(tileTransition) * BOUNDS_SIZE + BOUNDS_MARGIN);
         }
     }
 
@@ -268,7 +269,10 @@ public class StackScript : MonoBehaviour {
     // Lost game
     private void EndGame()
     {
-        Debug.Log("Lose");
+        if(PlayerPrefs.GetInt("score") < score)
+        {
+            PlayerPrefs.SetInt("score", score);
+        }
         gameOver = true;
         endPanel.SetActive(true);
         theStack[stackIndex].AddComponent<Rigidbody>();
