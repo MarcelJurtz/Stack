@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class StackScript : MonoBehaviour {
 
@@ -62,6 +63,7 @@ public class StackScript : MonoBehaviour {
     public Material stackMat;
 
     public Text scoreText;
+    public GameObject endPanel;
 
 
     void Start()
@@ -268,7 +270,13 @@ public class StackScript : MonoBehaviour {
     {
         Debug.Log("Lose");
         gameOver = true;
+        endPanel.SetActive(true);
         theStack[stackIndex].AddComponent<Rigidbody>();
+    }
+
+    public void OnButtonClick(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
     }
 
     private Color32 Lerp4(Color32 a, Color32 b, Color32 c, Color32 d, float t)
