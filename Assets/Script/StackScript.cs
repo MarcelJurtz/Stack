@@ -10,7 +10,7 @@ public class StackScript : MonoBehaviour {
     private const float BOUNDS_SIZE = 3.5f;
 
     // Margin for the block-movement
-    private const float BOUNDS_MARGIN = 1.0f;
+    private const float BOUNDS_MARGIN = 2.0f;
 
     // Movement speed for the camera
     private const float STACK_SPEED = 5.0f;
@@ -246,14 +246,15 @@ public class StackScript : MonoBehaviour {
         tileTransition += Time.deltaTime * tileSpeed;
         if (isMovingOnX)
         {
-            theStack[stackIndex].transform.localPosition = new Vector3(Mathf.Sin(tileTransition) * BOUNDS_SIZE + BOUNDS_MARGIN, score, secondaryPosition);
+            theStack[stackIndex].transform.localPosition = new Vector3(Mathf.Sin(tileTransition) * (BOUNDS_SIZE + BOUNDS_MARGIN), score, secondaryPosition);
         }
         else
         {
-            theStack[stackIndex].transform.localPosition = new Vector3(secondaryPosition, score, Mathf.Sin(tileTransition) * BOUNDS_SIZE + BOUNDS_MARGIN);
+            theStack[stackIndex].transform.localPosition = new Vector3(secondaryPosition, score, Mathf.Sin(tileTransition) * (BOUNDS_SIZE + BOUNDS_MARGIN));
         }
     }
 
+    // Rubble to fall off when cut
     private void CreateRubble(Vector3 pos, Vector3 scale)
     {
         GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -283,6 +284,7 @@ public class StackScript : MonoBehaviour {
         SceneManager.LoadScene(sceneName);
     }
 
+    // Set colors for cubes
     private Color32 Lerp4(Color32 a, Color32 b, Color32 c, Color32 d, float t)
     {
         if (t < 0.33f)
