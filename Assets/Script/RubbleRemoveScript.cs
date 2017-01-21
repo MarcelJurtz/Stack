@@ -6,7 +6,7 @@ public class RubbleRemoveScript : MonoBehaviour {
 
 	private void OnCollisionEnter(Collision col)
     {
-        Debug.Log("Hit");
+        // Destroy rubble when fallen far enough (hitting plane)
         Destroy(col.gameObject);
     }
 }
