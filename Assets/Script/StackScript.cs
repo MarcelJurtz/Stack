@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class StackScript : MonoBehaviour {
+public class StackScript : MonoBehaviour
+{
 
     // Default-size for blocks
     private const float BOUNDS_SIZE = 3.5f;
@@ -81,7 +80,7 @@ public class StackScript : MonoBehaviour {
 
     void Update()
     {
-        if(gameOver)
+        if (gameOver)
         {
             return;
         }
@@ -93,7 +92,8 @@ public class StackScript : MonoBehaviour {
                 SpawnTile();
                 score++;
                 scoreText.text = score.ToString();
-            } else
+            }
+            else
             {
                 EndGame();
             }
@@ -116,7 +116,7 @@ public class StackScript : MonoBehaviour {
         {
             // X - AXIS
             float deltaX = lastTilePosition.x - t.position.x;
-            if(Mathf.Abs(deltaX) > ERROR_MARGIN)
+            if (Mathf.Abs(deltaX) > ERROR_MARGIN)
             {
                 // Cut the tile & reset combo
                 combo = 0;
@@ -130,18 +130,10 @@ public class StackScript : MonoBehaviour {
                 t.localScale = new Vector3(stackBounds.x, 1, stackBounds.y);
 
                 // Generate falling rest of cutted block
-                float rubblePosX;
-                if(t.position.x > 0)
-                {
-                    rubblePosX = t.position.x + (t.localScale.x / 2);
-                }
-                else
-                {
-                    rubblePosX = t.position.x - (t.localScale.x / 2);
-                }
+                float rubblePosX = t.position.x > 0 ? t.position.x + (t.localScale.x / 2) : t.position.x - (t.localScale.x / 2);
                 CreateRubble(
                     new Vector3(rubblePosX, t.position.y, t.position.z),
-                    new Vector3(Mathf.Abs(deltaX),1,t.localScale.z)
+                    new Vector3(Mathf.Abs(deltaX), 1, t.localScale.z)
                 );
                 t.localPosition = new Vector3(middle - (lastTilePosition.x / 2), score, lastTilePosition.z);
 
@@ -178,15 +170,7 @@ public class StackScript : MonoBehaviour {
                 t.localScale = new Vector3(stackBounds.x, 1, stackBounds.y);
 
                 // Generate falling rest of cutted block
-                float rubblePosZ;
-                if (t.position.z > 0)
-                {
-                    rubblePosZ = t.position.z + (t.localScale.z / 2);
-                }
-                else
-                {
-                    rubblePosZ = t.position.z - (t.localScale.z / 2);
-                }
+                float rubblePosZ = t.position.z > 0 ? t.position.z + (t.localScale.z / 2) : t.position.z - (t.localScale.z / 2);
                 CreateRubble(
                     new Vector3(t.position.x, t.position.y, rubblePosZ),
                     new Vector3(t.localScale.x, 1, Mathf.Abs(deltaZ))
@@ -197,30 +181,26 @@ public class StackScript : MonoBehaviour {
             }
             else
             {
-                if(combo >= COMBO_GAIN_STEP && stackBounds.y < BOUNDS_SIZE)
+                if (combo >= COMBO_GAIN_STEP && stackBounds.y < BOUNDS_SIZE)
                 {
                     stackBounds.y += STACK_BOUNDS_GAIN;
                     float middle = lastTilePosition.z + t.localPosition.z / 2;
                     t.localScale = new Vector3(stackBounds.x, 1, stackBounds.y);
                     t.localPosition = new Vector3(lastTilePosition.x, score, middle - (lastTilePosition.z / 2));
-                } 
+                }
                 combo++;
                 t.localPosition = new Vector3(lastTilePosition.x, score, lastTilePosition.z);
             }
         }
 
 
-        if(isMovingOnX)
-        {
-            secondaryPosition = t.localPosition.x;
-        } else
-        {
-            secondaryPosition = t.localPosition.z;
-        }
-        
+        secondaryPosition = isMovingOnX ? t.localPosition.x : t.localPosition.z;
         isMovingOnX = !isMovingOnX;
+
         return true;
     }
+
+
 
     // Spawn new tile from the bottom of the stack to the top
     private void SpawnTile()
@@ -244,14 +224,9 @@ public class StackScript : MonoBehaviour {
     private void MoveTile()
     {
         tileTransition += Time.deltaTime * tileSpeed;
-        if (isMovingOnX)
-        {
-            theStack[stackIndex].transform.localPosition = new Vector3(Mathf.Sin(tileTransition) * (BOUNDS_SIZE + BOUNDS_MARGIN), score, secondaryPosition);
-        }
-        else
-        {
-            theStack[stackIndex].transform.localPosition = new Vector3(secondaryPosition, score, Mathf.Sin(tileTransition) * (BOUNDS_SIZE + BOUNDS_MARGIN));
-        }
+        theStack[stackIndex].transform.localPosition = isMovingOnX ?
+            new Vector3(Mathf.Sin(tileTransition) * (BOUNDS_SIZE + BOUNDS_MARGIN), score, secondaryPosition) :
+            new Vector3(secondaryPosition, score, Mathf.Sin(tileTransition) * (BOUNDS_SIZE + BOUNDS_MARGIN));
     }
 
     // Rubble to fall off when cut
@@ -270,7 +245,7 @@ public class StackScript : MonoBehaviour {
     // Lost game
     private void EndGame()
     {
-        if(PlayerPrefs.GetInt("score") < score)
+        if (PlayerPrefs.GetInt("score") < score)
         {
             PlayerPrefs.SetInt("score", score);
         }
@@ -302,7 +277,7 @@ public class StackScript : MonoBehaviour {
 
         float f = Mathf.Sin(score * 0.25f);
 
-        for(int i = 0; i<vertices.Length; i++)
+        for (int i = 0; i < vertices.Length; i++)
         {
             colors[i] = Lerp4(gameColors[0], gameColors[1], gameColors[2], gameColors[3], f);
         }
